@@ -57,7 +57,7 @@ app.engine(
   app.set("view engine", "handlebars");
   
   // Connect to the Mongo DB
-mongoose.connect("mongodb://localhost/unit18Populater", { useNewUrlParser: true });
+mongoose.connect("mongodb://localhost/scrapements", { useNewUrlParser: true });
 
 require("./routes/api-routes.js")(app); // load our routes and pass in our app and fully configured passport
 
