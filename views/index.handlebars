@@ -1,56 +1,95 @@
-          <div id="carousel" 
-                    class="editable"
-                    data-option="carousel">
+          <div id="carousel" class="editable" data-option="carousel">
 
-                        <div class="carousel carousel-option-three">
-                                
-                                <div class="slide" style="background: url(https://images.unsplash.com/photo-1504711434969-e33886168f5c) no-repeat center; background-size: cover;">
-                                  <div class="slideText">
-                                    <h1>Save Scraped Articles</h1>
-                                    <p>Pick and choose articles.</p>
-                                  </div>
-                                  <img src="/assets/images/placeholder.png" alt="imageTwo">
-                                </div>
+            <div class="carousel">
 
-                                <div class="slide" style="background: url(https://images.unsplash.com/photo-1529243856184-fd5465488984) no-repeat center; background-size: cover;">
-                                  <div class="slideText">
-                                    <h1>Scrape and Comment </h1>
-                                    <p>Add your comments to scraped content.</p>
-                                  </div>
-                                  <img src="/assets/images/placeholder.png" alt="imageOne">
-                                </div>
-                        
-                                
-                        
-                                <div class="slide" style="background: url(https://images.unsplash.com/photo-1495020689067-958852a7765e) no-repeat center; background-size: cover;">
-                                  <div class="slideText">
-                                    <h1>Read in Peace</h1>
-                                    <p>Read the news for future reading...</p>
-                                  </div>
-                                  <img src="/assets/images/placeholder.png" alt="imageThree">
-                                </div>
-                        
-                              
-                          
-                          </div>                        
+              <div class="slide"
+                style="background: url(https://images.unsplash.com/photo-1504711434969-e33886168f5c) no-repeat center; background-size: cover;">
+                <div class="slideText">
+                  <h1>Save Scraped Articles</h1>
+                  <p>Pick and choose articles.</p>
                 </div>
-            
-                <div id="body">
-						 <!-- one column  -->
-						     <div id="page-scrape-news-articles" data-cols="1"  data-index=0 class="container bodyEditable">
-						         <div class="row">
-						             <div class="col-md-12">
-						                     <h5>Column 1</h5>
-						                     <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum is simply dummy text of the printing and typesetting industry. </p>
-						             </div>
-						         </div>
-						     </div>						 <!-- one column  -->
-						     <div id="page-view-saved-articles" data-cols="1"  data-index=1 class="container bodyEditable">
-						         <div class="row">
-						             <div class="col-md-12">
-						                     <h5>Column 1</h5>
-						                     <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum is simply dummy text of the printing and typesetting industry. </p>
-						             </div>
-						         </div>
-						     </div>                
+                <img src="/assets/images/placeholder.png" alt="imageTwo">
               </div>
+
+              <div class="slide"
+                style="background: url(https://images.unsplash.com/photo-1529243856184-fd5465488984) no-repeat center; background-size: cover;">
+                <div class="slideText">
+                  <h1>Scrape and Comment </h1>
+                  <p>Add your comments to scraped content.</p>
+                </div>
+                <img src="/assets/images/placeholder.png" alt="imageOne">
+              </div>
+
+              <div class="slide"
+                style="background: url(https://images.unsplash.com/photo-1495020689067-958852a7765e) no-repeat center; background-size: cover;">
+                <div class="slideText">
+                  <h1>Read in Peace</h1>
+                  <p>Read the news for future reading...</p>
+                </div>
+                <img src="/assets/images/placeholder.png" alt="imageThree">
+              </div>
+
+
+
+            </div>
+          </div>
+
+          <div id="body">
+            <!-- one column  -->
+
+            <div id="page-scrape-news-articles" class="container">
+              <div class="row">
+                <div class="col-md-12">
+
+                {{#if data}}  
+                  {{#each data}}
+                    <article>
+                      <div class="row">
+                        <div class="col-md-3">
+                          <a class="article-image" href="{{ link }}" style="background: #000 url({{ image }}) center no-repeat; background-size: cover;">
+                            <img src="/assets/images/placeholder.png" alt="{{ title }}">
+                          </a>
+                        </div>
+                        <div class="col-md-6">
+                          <h5><a href="{{ link }}" title="view article" target="_blank">{{ title }}</a></h5>
+                          <p>{{ category }} &bull; {{ excerpt }}</p>
+                          <small>Source: <a href="{{ source }}" target="_blank">{{ source }}</a></small>
+                        </div>
+                        <div class="col-md-3">
+                          
+                          {{#if id}}
+                              <a href="#" data-id="{{ id }}" class="remove-article button btn-secondary">
+                                Remove from Saved
+                              </a>
+                             <a href="#" data-id="{{ id }}" class="comment-article button btn-primary">
+                                Add Comments
+                              </a>
+                          {{else}}
+                            <a href="#" class="button btn-primary">
+                              Save Article
+                            </a>
+                          {{/if}}
+                          
+                        </div>
+                      </div>
+                     
+                    </article>
+                   
+                    
+                  {{/each}}
+                
+                {{else}}
+                    
+                    {{#if totalArticles}}
+                    <a class="button body-btn btn-secondary" href="/saved"><i class="far fa-newspaper"></i> &nbsp; Click here to view Saved Articles</a> <br>OR<br>
+                    {{/if}}
+                    <a class="button body-btn btn-secondary" href="/scrape"><i class="fas fa-archive"></i> &nbsp; There are no saved article yet. Click here to SCRAPE data! </a>
+
+                {{/if}}
+                </div>
+              </div>
+            </div>
+
+    
+            
+          </div>

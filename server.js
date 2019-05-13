@@ -1,8 +1,6 @@
 var express = require("express");
 var logger = require("morgan");
 var mongoose = require("mongoose");
-var axios = require("axios");
-var cheerio = require("cheerio");
 
 var PORT = process.env.PORT || 8080;
 
@@ -49,6 +47,7 @@ app.engine(
         },
         stringify: function(data) {
           // Use this tool to output JSON
+          // Usage {{stringify OBJECT}}
           return JSON.stringify(data);
         }
       }

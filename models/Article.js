@@ -11,8 +11,24 @@ var ArticleSchema = new Schema({
     type: String,
     required: true
   },
+  excerpt: {
+    type: String,
+    required: true
+  },
+  image: {
+    type: String,
+    required: false
+  },
   // `link` is required and of type String
   link: {
+    type: String,
+    required: true
+  },
+  category: {
+    type: String,
+    required: false
+  },
+  source: {
     type: String,
     required: true
   },

@@ -40,128 +40,15 @@ $(function() {
     return false;
   });
 
-  $(".login-action").on("click", function() {
-    $(".modal-content").removeClass("show");
-    $(".overlay,.modal-content.login").addClass("show");
-    return false;
-  });
-
-  $(".signup-action").on("click", function() {
-    $(".modal-content").removeClass("show");
-    $(".overlay,.modal-content.signup").addClass("show");
-    return false;
-  });
-
-  $(".cancel-action").on("click", function() {
-    $(".modal-content,.overlay").removeClass("show");
-    return false;
-  });
-
-  $(".login-form").on("submit", function(e) {
-    e.preventDefault();
-    $.ajax({
-      type: "POST",
-      url: "/login",
-      data: {
-        username: $(".login-form #username").val(),
-        password: $(".login-form #password").val()
-      },
-      success: function(data) {
-        window.location = "/framework";
-      },
-      error: function(ajaxContext) {
-        $(".login-form").addClass("error");
-        setTimeout(function() {
-          $(".login-form").removeClass("error");
-        }, 2000);
-      }
-    });
-    return false;
-  });
-
-  $(".signup-form").on("submit", function(e) {
-    e.preventDefault();
-    $.ajax({
-      type: "POST",
-      url: "/signup",
-      data: {
-        name: $(".signup-form #name-signup").val(),
-        username: $(".signup-form #username-signup").val(),
-        password: $(".signup-form #password-signup").val()
-      },
-      success: function(data) {
-        window.location = "/framework";
-      },
-      error: function(ajaxContext) {
-        $(".signup-form").addClass("error");
-        setTimeout(function() {
-          $(".signup-form").removeClass("error");
-        }, 2000);
-      }
-    });
-    return false;
-  });
-
-  $(".logout-action").on("click", function(e) {
-    e.preventDefault();
-    console.log("LOGING OUT");
-    $.ajax({
-      type: "GET",
-      url: "/logout",
-      success: function(response) {
-        console.log("logged out");
-        window.location = "/";
-      }
-    });
-
-    $(".carousel.carousel-option-one").slick({
-        lazyLoad: "ondemand",
-        dots: false,
-        slidesToShow: 1,
-        centerMode: false
-    });
-    $(".carousel.carousel-option-two").slick({
-        lazyLoad: "ondemand",
-        slidesToShow: 1,
-        fade: true,
-        cssEase: "linear"
-    });
-    $(".carousel.carousel-option-three").slick({
+    $(".carousel").css("opacity","0").on('init', function(slick) {
+      console.log('fired!');
+      $(".carousel").animate({"opacity":"1"},1000);
+    }).slick({
         lazyLoad: "ondemand",
         dots: true,
         slidesToShow: 1,
-        centerMode: true
+        centerMode: false
     });
-  });
-
-    if($(".carousel").length){
-        $(".carousel.carousel-option-one").slick({
-            lazyLoad: 'ondemand',
-            dots: false,
-            slidesToShow: 1,
-            centerMode: false,
-        });
-        $(".carousel.carousel-option-two").slick({
-            lazyLoad: 'ondemand',
-            slidesToShow: 1,
-            fade: true,
-            cssEase: 'linear'
-        });
-        $(".carousel.carousel-option-three").slick({
-            lazyLoad: 'ondemand',
-            dots: true,
-            slidesToShow: 1
-        });
-    }
-
-    if(window.location.hash) {
-      if(window.location.hash == "#login"){
-        $(".login-action").click();
-      }
-      if(window.location.hash == "#signup"){
-        $(".signup-action").click();
-      }
-    } 
 
         
 });
