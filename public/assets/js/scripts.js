@@ -143,12 +143,13 @@ $(function() {
     function showOverlay(obj) {
         $(".overlay").addClass("show").hide();
         $(".overlay").fadeIn();
+        console.log('object',obj);
     }
 
     $(".modal-burger").on("click",function(){
         $(".overlay").fadeOut();
         setTimeOut(function(){
-          $(".overlay").removeClass("show").hide();
+          $(".overlay").removeClass("show");
         }, 1000);
     });
         

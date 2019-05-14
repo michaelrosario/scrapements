@@ -60,7 +60,8 @@ module.exports = function(app) {
                     
                     var category = $(element)
                                 .find(".th-topic")
-                                .text();
+                                .text()
+                                .trim();
 
                     if(link.indexOf("https://www.engadget.com") == -1){
                         link = 'https://www.engadget.com'+link;
