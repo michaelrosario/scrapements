@@ -34,21 +34,21 @@
 				</a>
 
 				<ul class="main-nav">
-					<li>
-						<a href="/scrape" data-target="page-scrape-news-articles">
+					<li {{#equal page_title "scrape"}}class="selected"{{/equal}}>
+						<a href="/scrape" 						data-target="page-scrape-news-articles">
 							<i class="far fa-newspaper"></i> &nbsp;
 							Scrape News Articles
 						</a>
 					</li>
 
-					{{#if totalArticles}}
-					<li>
+					
+					<li class="nav-saved {{#equal page_title "saved"}}selected{{/equal}} {{#unless totalArticles}}disabled{{/unless}}">
 						<a href="/saved" data-target="page-view-saved-articles">
 							<i class="fas fa-archive"></i> &nbsp;
-							View Saved Articles ({{totalArticles}})
+							View Saved Articles (<span class="saved-count">{{totalArticles}}</span>)
 						</a>
 					</li>
-					{{/if}}
+		
 				</ul>
 
 			</nav>
@@ -79,6 +79,13 @@
 
 		</div>
 
+	</div>
+
+	<div class="overlay">
+		<a href="#" class="modal-burger">
+			<span class="line-one"></span>
+			<span class="line-two"></span>
+		</a>
 	</div>
 
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js"></script>

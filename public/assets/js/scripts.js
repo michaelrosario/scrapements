@@ -50,5 +50,106 @@ $(function() {
         centerMode: false
     });
 
+    $(document).on("click",".save-article", function(){
+      let target = $(this).attr("data-target");
+      let article = $("#"+target);
+      let index = article.attr("data-index");
+      let button = $(this);
+      let savedText = button.text();
+      button.text("Saving...")
+     
+      console.log("data",data[index]);
+
+      delete data[index]._id;
+
+      $.ajax({
+        url: "/save",
+        method: "POST",
+        data: data[index],
+        success: function(response){
+          console.log('response',response);
+          let id = response._id;
+          button.addClass("disabled").text(savedText);
+          data[index]._id = id;
+          article
+            .attr("data-id",id)
+            .addClass("article-saved")
+            .find(".options").removeClass("disabled");
+            let count = parseInt($(".saved-count").text());
+            count++;
+            console.log('count',count);
+            $(".saved-count").text(count);
+            if(count == 0){
+              $(".nav-saved").addClass("disabled");
+            } else {
+              $(".nav-saved").removeClass("disabled");
+            }
+        }
+      })
+      
+      return false;
+
+    });
+
+    $(document).on("click",".remove-article", function(){
+      
+      var target = $(this).attr("data-target");
+      var article = $("#"+target);
+      var index = article.attr("data-index");
+      
+      console.log("data",data[index]);
+
+      $.ajax({
+        url: "/delete",
+        method: "POST",
+        data: data[index],
+        success: function(response){
+          console.log('response',response);
+          article.removeClass("article-saved")
+            .find(".options")
+            .addClass("disabled");
+          
+          article
+            .find(".save-article")
+            .removeClass("disabled");
+
+          let count = parseInt($(".saved-count").text());
+          count--;
+          console.log('count',count);
+          $(".saved-count").text(count);
+          if(count == 0){
+            $(".nav-saved").addClass("disabled");
+          } else {
+            $(".nav-saved").removeClass("disabled");
+          }
+        }
+      });
+
+      return false;
+    });
+
+    $(document).on("click",".comment-article", function(){
+      var target = $(this).attr("data-target");
+      var article = $("#"+target);
+      var index = article.attr("data-index");
+      
+      console.log("data id",data[index]._id);
+
+      showOverlay(data[index]);
+
+      return false;
+    });
+
+    function showOverlay(obj) {
+        $(".overlay").addClass("show").hide();
+        $(".overlay").fadeIn();
+    }
+
+    $(".modal-burger").on("click",function(){
+        $(".overlay").fadeOut();
+        setTimeOut(function(){
+          $(".overlay").removeClass("show").hide();
+        }, 1000);
+    });
         
 });

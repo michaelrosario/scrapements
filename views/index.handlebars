@@ -1,3 +1,5 @@
+          {{#equal page_title "home"}}
+          
           <div id="carousel" class="editable" data-option="carousel">
 
             <div class="carousel">
@@ -34,6 +36,8 @@
             </div>
           </div>
 
+          {{/equal}}
+
           <div id="body">
             <!-- one column  -->
 
@@ -41,9 +45,24 @@
               <div class="row">
                 <div class="col-md-12">
 
-                {{#if data}}  
+                {{#equal page_title "scrape"}}
+                <div class="masthead">
+                  <h1>Scrape News Articles</h1>
+                  <p>Save news articles you'd like to enable for commenting.</p>
+                </div>
+                {{/equal}}
+
+                {{#equal page_title "saved"}}
+                <div class="masthead">
+                  <h1>Saved Articles</h1>
+                  <p>Here's a list of your saved articles.</p>
+                </div>
+                {{/equal}}
+
+                {{#if data}} 
+
                   {{#each data}}
-                    <article>
+                    <article id="article{{ @index }}" data-index="{{ @index }}" data-id="{{ id }}" class="article-{{#if id}}saved{{else}}scraped{{/if}}">
                       <div class="row">
                         <div class="col-md-3">
                           <a class="article-image" href="{{ link }}" style="background: #000 url({{ image }}) center no-repeat; background-size: cover;">
@@ -56,34 +75,37 @@
                           <small>Source: <a href="{{ source }}" target="_blank">{{ source }}</a></small>
                         </div>
                         <div class="col-md-3">
-                          
-                          {{#if id}}
-                              <a href="#" data-id="{{ id }}" class="remove-article button btn-secondary">
+                       
+                          <div class="options {{#unless id}}disabled{{/unless}}">
+                              <a href="#" data-id="{{ id }}" data-target="article{{@index}}" class="remove-article button btn-secondary">
                                 Remove from Saved
                               </a>
-                             <a href="#" data-id="{{ id }}" class="comment-article button btn-primary">
+                             <a href="#" data-id="{{ id }}" data-target="article{{@index}}" class="comment-article button btn-primary">
                                 Add Comments
                               </a>
-                          {{else}}
-                            <a href="#" class="button btn-primary">
-                              Save Article
-                            </a>
-                          {{/if}}
+                          </div>
+                              
+                        
+                          <a href="#" data-target="article{{@index}}" class="save-article button btn-primary {{#if id}}disabled{{/if}}">
+                            Save Article
+                          </a>
+                         
                           
                         </div>
                       </div>
                      
                     </article>
-                   
                     
                   {{/each}}
                 
                 {{else}}
                     
-                    {{#if totalArticles}}
-                    <a class="button body-btn btn-secondary" href="/saved"><i class="far fa-newspaper"></i> &nbsp; Click here to view Saved Articles</a> <br>OR<br>
-                    {{/if}}
-                    <a class="button body-btn btn-secondary" href="/scrape"><i class="fas fa-archive"></i> &nbsp; There are no saved article yet. Click here to SCRAPE data! </a>
+                    <div class="text-center">
+                      {{#if totalArticles}}
+                        <a class="button body-btn btn-secondary" href="/saved"><i class="far fa-newspaper"></i> &nbsp; Click here to view Saved Articles</a> <br>OR<br>
+                      {{/if}}
+                      <a class="button body-btn btn-secondary" href="/scrape"><i class="fas fa-archive"></i> &nbsp; There are no saved article yet. Click here to SCRAPE data! </a>
+                    </div>
 
                 {{/if}}
                 </div>
@@ -93,3 +115,9 @@
     
             
           </div>
+
+          <script>
+
+            var data = {{{stringify data}}};
+
+          </script>
