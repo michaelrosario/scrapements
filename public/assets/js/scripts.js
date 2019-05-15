@@ -132,8 +132,17 @@ $(function() {
       var target = $(this).attr("data-target");
       var article = $("#"+target);
       var index = article.attr("data-index");
+      var id = data[index]._id;
       
       console.log("data id",data[index]._id);
+
+      $.ajax({
+        url: "/comment/"+id,
+        method: "GET",
+        success: function(response){
+          console.log("response",response);
+        }
+      });
 
       showOverlay(data[index]);
 
@@ -148,7 +157,7 @@ $(function() {
 
     $(".modal-burger").on("click",function(){
         $(".overlay").fadeOut();
-        setTimeOut(function(){
+        setTimeout(function(){
           $(".overlay").removeClass("show");
         }, 1000);
     });
