@@ -42,11 +42,6 @@ var ArticleSchema = new Schema({
   }]
 });
 
-ArticleSchema.pre("deleteOne",function(next){
-  console.log("deleting related comments...",this._id);
-  next();
-});
-
 // This creates our model from the above schema, using mongoose's model method
 var Article = mongoose.model("Article", ArticleSchema);
 

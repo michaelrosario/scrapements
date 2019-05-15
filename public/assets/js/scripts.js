@@ -128,7 +128,7 @@ $(function() {
       return false;
     });
 
-    var commentID = "";
+    var commentID = ""; // keep track of current article
 
     $(document).on("click",".comment-article", function(){
       var target = $(this).attr("data-target");
@@ -177,6 +177,17 @@ $(function() {
 
     $(document).on("click",".trashComment",function(){
       console.log($(this).attr("data-id"));
+      var currentComment = $(this).parent();
+      var currentCommentId = $(this).attr("data-id");
+      $.ajax({
+        url: '/comment/delete/'+currentCommentId+"/"+commentID,
+        method: "POST",
+        success: function(response){
+          
+          showComments(response.comments);
+
+        }
+      });
       return false;
     });
 
@@ -203,7 +214,8 @@ $(function() {
 
         const data = { 
           name: nameInput.trim(),
-          body: commentInput.trim()
+          body: commentInput.trim(),
+          article: commentID
         };
 
         console.log("data",data);
@@ -212,6 +224,7 @@ $(function() {
           data: data,
           method: "POST",
           success: function(response){
+
             showComments(response.comments);
           }
         });
@@ -224,19 +237,26 @@ $(function() {
 
     function showComments(arrayObj){
       $("#comments").html("");
-      arrayObj.forEach(element => {
-        $("#comments").prepend(`
-            <a href="#" class="trashComment" 
-              data-id="${element.comment._id}"
-              title="remove this comment">
-              <i class="fas fa-trash"></i>
-            </a>
-            <strong>Name:</strong> ${element.comment.name}<br>
-            <strong>Comment:</strong> ${element.comment.body}<br>
-            <strong>Date:</strong> ${element.comment.timeStamp}
-          <br><hr>
-        `);
-      });
+      $("form #name").val("");
+      $("form #body").val("");
+      if(arrayObj.length){
+        arrayObj.forEach(element => {
+          $("#comments").prepend(`
+              <div class="comment-entry"><a href="#" class="trashComment" 
+                data-id="${element.comment._id}"
+                title="remove this comment">
+                <i class="fas fa-trash"></i>
+              </a>
+              <strong>Name:</strong> ${element.comment.name}<br>
+              <strong>Comment:</strong> ${element.comment.body}<br>
+              <strong>Date:</strong> ${element.comment.timeStamp}
+            <br><hr>
+            </div>
+          `);
+        });
+      } else {
+        $("#comments").html("No comments yet... add one now!");
+      }
     }
         
 });

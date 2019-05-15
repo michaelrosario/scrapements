@@ -61,9 +61,9 @@ module.exports = function(app) {
                     var image = $(element).find(".lazy,.stretch-img").attr('data-original') || "";
                     var title = $(element).find("h2").text().trim() || "";
                     var excerpt =  $(element)
-                                    .find("p")
-                                    .text()
-                                    .trim() || "";
+                                .find("p")
+                                .text()
+                                .trim() || "";
                     var link = $(element)
                                 .find(".o-hit__link")
                                 .attr("href")
@@ -143,6 +143,13 @@ module.exports = function(app) {
 
     app.post("/delete",function(req, res) {
         
+        // delete all related comments
+        db.Comment.deleteMany({ 
+            article: req.body._id
+         }, 
+            function (err) {});
+        
+        // delete article
         db.Article.deleteOne({ _id: req.body._id }, function(err){
             if (!err) {
                 console.log()
@@ -172,17 +179,32 @@ module.exports = function(app) {
         });
     });
 
-    app.post("/comment/delete/:id",function(req, res) {
+    app.post("/comment/delete/:id/:articleId",function(req, res) {
         
-        db.Comment.deleteOne({ _id: req.params.id }, function(err){
-            if (!err) {
-                res.json(req.params.id);
-            }
-            else {
-                res.json("failed remove "+req.params.id);
-            }
-        });       
+        let articleId = req.params.articleId;
+        let commentId = req.params.id;
 
+        db.Article.findOneAndUpdate({ 
+            _id: articleId
+        }, { 
+            "$pull": {
+                comments: { comment : commentId }
+            }
+        },{ multi: true, new: true }, (error, doc) => {
+            if(!error){
+                db.Comment.deleteOne({ _id: commentId }, function(err){
+                    if (!err) {
+                        //res.json(doc);
+                    }
+                    else {
+                        res.json("failed remove "+commentId);
+                    }
+                });
+            }
+        }).populate("comments.comment")
+        .exec(function(err,dbUpdate){
+            res.json(dbUpdate);
+        })
     });
 
     // Route for saving/updating an Article's associated Comment
@@ -192,7 +214,7 @@ module.exports = function(app) {
         .then(function(dbComment) {
             // If a Comment was created successfully, find one Article with an `_id` equal to `req.params.id`. Update the Article to be associated with the new Comment
             // { new: true } tells the query that we want it to return the updated User -- it returns the original by default
-            // Since our mongoose query returns a promise, we can chain another `.then` which receives the result of the query
+            // Since our mongoose query returns a promise, we can chain another `.then` which receives the result of the query   
             return db.Article.findOneAndUpdate({ 
                 _id: req.params.id 
             }, { 

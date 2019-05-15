@@ -314,7 +314,7 @@ article .disabled { display: none; }
 .masthead { margin: 60px 0 30px; }
 
 .modal-burger { 
-    position: absolute;
+    position: fixed;
     display: inline-block; 
     right: 30px;
     top: 35px;

@@ -10,8 +10,19 @@ var CommentSchema = new Schema({
   name: String,
   // `body` is of type String
   body: String,
-  timeStamp: { type: Date, default: Date.now }
+  timeStamp: { type: Date, default: Date.now },
+  article: {
+    type: Schema.Types.ObjectId,
+    ref: 'Article'
+  } 
 });
+
+/*
+ArticleSchema.pre("deleteOne",function(next){
+  console.log("deleting related comments...");
+  next();
+});
+*/
 
 // This creates our model from the above schema, using mongoose's model method
 var Comment = mongoose.model("Comment", CommentSchema);
