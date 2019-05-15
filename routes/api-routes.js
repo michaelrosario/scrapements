@@ -43,7 +43,18 @@ module.exports = function(app) {
 
 
             db.Article.find({}).then(function(savedArticles){
-                articleCount = savedArticles.length;
+                articleCount = savedArticles.length
+                
+                // create a new object to be used to check 
+                // if it article is already saved on the DB
+                var savedArticlesOnDB = {};
+                
+                savedArticles.map(function(article){
+                    savedArticlesOnDB[article.title] = article._id;
+                });
+
+                //console.log("savedArticles",savedArticles);
+                //console.log("savedArticlesOnDB",savedArticlesOnDB);
 
                 $("article.o-hit").each(function(i, element) {
                     
@@ -80,21 +91,22 @@ module.exports = function(app) {
                                     source: source,
                                     link: link
                                 }
-
-                                if(savedArticles.indexOf(title)){
-                                    data._id = savedArticles._id
+                                
+                                // fix this so it is checking for the right index
+                                // console.log("savedArticlesOnDB[title]",savedArticlesOnDB[title]);
+                                if(savedArticlesOnDB[title]){
+                                    data._id = savedArticlesOnDB[title];
                                 } else {
                                     data._id = "";
                                 }                        
                                 results.push(data);
-                    
                            
                         }
 
                 });
 
             // Log the results once you've looped through each of the elements found with cheerio
-            console.log(results);
+            //console.log(results);
             res.render("index",{ 
                 data: results, 
                 totalArticles: articleCount,
@@ -118,7 +130,7 @@ module.exports = function(app) {
         db.Article.create(req.body)
         .then(function(dbArticle) {
           // View the added result in the console
-          console.log(dbArticle);
+          // console.log(dbArticle);
           res.json(dbArticle);
         })
         .catch(function(err) {
@@ -133,6 +145,7 @@ module.exports = function(app) {
         
         db.Article.deleteOne({ _id: req.body._id }, function(err){
             if (!err) {
+                console.log()
                 res.json(req.body._id);
             }
             else {
@@ -147,9 +160,10 @@ module.exports = function(app) {
         // Using the id passed in the id parameter, prepare a query that finds the matching one in our db...
         db.Article.findOne({ _id: req.params.id })
         // ..and populate all of the notes associated with it
-        .populate("comment")
+        .populate("comments.comment")
         .then(function(dbArticle) {
             // If we were able to successfully find an Article with the given id, send it back to the client
+            console.log('article',dbArticle);
             res.json(dbArticle);
         })
         .catch(function(err) {
@@ -182,10 +196,12 @@ module.exports = function(app) {
             return db.Article.findOneAndUpdate({ 
                 _id: req.params.id 
             }, { 
-                note: dbComment._id 
+                "$push": {
+                    comments: { comment: dbComment._id }
+                }
             }, { 
                 new: true 
-            });
+            }).populate("comments.comment");
         })
         .then(function(dbArticle) {
             // If we were able to successfully update an Article, send it back to the client

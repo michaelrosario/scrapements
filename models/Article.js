@@ -19,7 +19,6 @@ var ArticleSchema = new Schema({
     type: String,
     required: false
   },
-  // `link` is required and of type String
   link: {
     type: String,
     required: true
@@ -32,13 +31,20 @@ var ArticleSchema = new Schema({
     type: String,
     required: true
   },
-  // `note` is an object that stores a Note id
-  // The ref property links the ObjectId to the Note model
-  // This allows us to populate the Article with an associated Note
-  comment: {
-    type: Schema.Types.ObjectId,
-    ref: "Comment"
-  }
+  // `comment` is an object that stores a Comment id
+  // The ref property links the ObjectId to the Comment model
+  // This allows us to populate the Article with an associated Comment
+  comments: [{
+    comment: {
+      type: Schema.Types.ObjectId,
+      ref: "Comment"
+    }
+  }]
+});
+
+ArticleSchema.pre("deleteOne",function(next){
+  console.log("deleting related comments...",this._id);
+  next();
 });
 
 // This creates our model from the above schema, using mongoose's model method

@@ -128,19 +128,32 @@ $(function() {
       return false;
     });
 
+    var commentID = "";
+
     $(document).on("click",".comment-article", function(){
       var target = $(this).attr("data-target");
       var article = $("#"+target);
       var index = article.attr("data-index");
       var id = data[index]._id;
+      commentID = id;
       
+      $("#current-title").text(data[index].title);
       console.log("data id",data[index]._id);
+
+      $("#comments").html("loading...");
 
       $.ajax({
         url: "/comment/"+id,
         method: "GET",
         success: function(response){
-          console.log("response",response);
+          console.log("comment",response);
+          if(response.comments){
+  
+            showComments(response.comments);
+
+          } else {
+            $("#comments").html("no comments...");
+          }
         }
       });
 
@@ -161,5 +174,69 @@ $(function() {
           $(".overlay").removeClass("show");
         }, 1000);
     });
+
+    $(document).on("click",".trashComment",function(){
+      console.log($(this).attr("data-id"));
+      return false;
+    });
+
+    $("#submit-comment").on("submit",function(){
+      
+      var nameInput = $("form #name").val() || "";
+      var commentInput = $("form #body").val() || ""; 
+
+      if(nameInput.length <= 2){
+        $("form #name").addClass("error");
+        setTimeout(function(){
+          $("form #name").removeClass("error");
+        },2000);
+      }
+
+      if(commentInput.length <= 2){
+        $("form #body").addClass("error");
+        setTimeout(function(){
+          $("form #body").removeClass("error");
+        },2000);
+      }
+
+      if(nameInput.length > 2  && commentInput.length > 2){
+
+        const data = { 
+          name: nameInput.trim(),
+          body: commentInput.trim()
+        };
+
+        console.log("data",data);
+        $.ajax({
+          url: '/comment/'+commentID,
+          data: data,
+          method: "POST",
+          success: function(response){
+            showComments(response.comments);
+          }
+        });
+      
+      } 
+
+      return false;
+
+    })
+
+    function showComments(arrayObj){
+      $("#comments").html("");
+      arrayObj.forEach(element => {
+        $("#comments").prepend(`
+            <a href="#" class="trashComment" 
+              data-id="${element.comment._id}"
+              title="remove this comment">
+              <i class="fas fa-trash"></i>
+            </a>
+            <strong>Name:</strong> ${element.comment.name}<br>
+            <strong>Comment:</strong> ${element.comment.body}<br>
+            <strong>Date:</strong> ${element.comment.timeStamp}
+          <br><hr>
+        `);
+      });
+    }
         
 });

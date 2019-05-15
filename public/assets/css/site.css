@@ -3,6 +3,7 @@ CSS STYLES
 --------------------------------------
 Specific to the user sites 
 */
+* { box-sizing: border-box; }
 
 #body  { 
     padding: 10px 0 30px; 
@@ -18,7 +19,7 @@ Specific to the user sites
 
 .card { margin-bottom: 20px; }
 
-.carousel { float: left; width: 100%; opacity: 0; }
+.carousel { float: left; width: 100%; opacity: 0; margin-top: 70px; }
 .carousel .slide { position: relative; }
 .carousel .slide,
 .carousel img { float: left; width: 100%; height: auto; }
@@ -299,6 +300,7 @@ article .disabled { display: none; }
 
 .overlay { display: none; }
 .overlay.show { 
+    overflow-y: scroll;
     top: 0px;
     left: 0px;
     z-index: 9999;
@@ -315,7 +317,7 @@ article .disabled { display: none; }
     position: absolute;
     display: inline-block; 
     right: 30px;
-    top: 25px;
+    top: 35px;
     width: 40px;
     height: 40px;
 }
@@ -340,4 +342,89 @@ article .disabled { display: none; }
 .modal-burger .line-two {
     top: 18px;
     transform: rotate(45deg);
+}
+ 
+.modal-content {
+    width: 90%;
+    max-width: 600px;
+    padding: 30px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.modal-content #comments {
+    padding: 10px;
+    border: 1px solid #444;
+    width: 100%;
+    height: 150px;
+    overflow-y: scroll;
+    background: #efefef;
+    margin: 0 0 20px 0;
+}
+
+.modal-content label {
+    width: 100%;
+    clear: both;
+    margin: 10px 0 5px 0;
+    font-weight: 900;
+}
+
+.modal-content textarea,
+.modal-content input {
+    height: 40px;
+    padding: 10px;
+    border: 1px solid #999;
+    border-radius: 5px;
+    width: 100%;
+}
+
+.modal-content textarea.error,
+.modal-content input.error {
+    border: 2px solid #FF0000;  
+}
+
+.modal-content textarea {
+    height: 100px;
+    margin: 0 0 20px 0;
+    padding: 10px !important;
+    box-sizing: border-box;
+}
+
+.modal-content button {
+    border-radius: 5px;
+    border: 1px solid #990088;
+    background: #559966;
+    color: #FFF;
+    font-weight: 900;
+    padding: 10px 30px;
+    outline: none;
+}
+
+#current-title { font-weight: 900; }
+
+.trashComment { 
+    float: right; 
+    margin: 0 10px 0 0;
+}
+
+@media(max-height: 799px){
+    .modal-content { 
+        position: relative;
+        margin: 40px auto !important;
+        top: auto;
+        left: auto;
+        transform: translate(0%, 0%);
+    }
+}
+
+@media(max-width: 767px){
+    .modal-content { 
+        position: relative;
+        margin: 40px auto !important;
+        top: auto;
+        left: auto;
+        transform: translate(0%, 0%);
+    }
 }

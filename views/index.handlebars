@@ -62,7 +62,7 @@
                 {{#if data}} 
 
                   {{#each data}}
-                    <article id="article{{ @index }}" data-index="{{ @index }}" data-id="{{ id }}" class="article-{{#if id}}saved{{else}}scraped{{/if}}">
+                    <article id="article{{ @index }}" data-index="{{ @index }}" data-id="{{ _id }}" class="article-{{#if _id}}saved{{else}}scraped{{/if}}">
                       <div class="row">
                         <div class="col-md-3">
                           <a class="article-image" href="{{ link }}" style="background: #000 url({{ image }}) center no-repeat; background-size: cover;">
@@ -76,17 +76,17 @@
                         </div>
                         <div class="col-md-3">
                        
-                          <div class="options {{#unless id}}disabled{{/unless}}">
-                              <a href="#" data-id="{{ id }}" data-target="article{{@index}}" class="remove-article button btn-secondary">
+                          <div class="options {{#unless _id}}disabled{{/unless}}">
+                              <a href="#" data-id="{{ _id }}" data-target="article{{@index}}" class="remove-article button btn-secondary">
                                 Remove from Saved
                               </a>
-                             <a href="#" data-id="{{ id }}" data-target="article{{@index}}" class="comment-article button btn-primary">
+                             <a href="#" data-id="{{ _id }}" data-target="article{{@index}}" class="comment-article button btn-primary">
                                 View or Add Comments
                               </a>
                           </div>
                               
                         
-                          <a href="#" data-target="article{{@index}}" class="save-article button btn-primary {{#if id}}disabled{{/if}}">
+                          <a href="#" data-target="article{{@index}}" class="save-article button btn-primary {{#if _id}}disabled{{/if}}">
                             Save Article
                           </a>
                          

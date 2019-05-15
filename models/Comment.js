@@ -9,7 +9,8 @@ var CommentSchema = new Schema({
   // `title` is of type String
   name: String,
   // `body` is of type String
-  comment: String
+  body: String,
+  timeStamp: { type: Date, default: Date.now }
 });
 
 // This creates our model from the above schema, using mongoose's model method

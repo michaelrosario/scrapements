@@ -88,16 +88,21 @@
 		</a>
 		<div class="modal-content">
 
-			<div id="comments">Loading...</div>
-
+			<h3><span id="current-title"></span></h3>
+			<br>
+			<h5>Add a Comment:</h5>
+			<form id="submit-comment">
 			<label for="name">Name:</label>
 			<input id="name" name="name" value="" placeholder="Your Name">
 
-			<label for="comment">Comment:</label>
-			<textarea id="comment" name="comment" placeholder="Your Comment">
-			</textarea>
+			<label for="body">Comment:</label>
+			<textarea id="body" name="body" placeholder="Your Comment"></textarea>
 
 			<button>Submit</button>
+			</form>
+			<hr>
+			<br><h5>Comments:</h5>
+			<div id="comments">Loading...</div>
 
 
 		</div>
