@@ -74,11 +74,15 @@ $(function() {
           article
             .attr("data-id",id)
             .addClass("article-saved")
-            .find(".options").removeClass("disabled");
+            .find(".options")
+            .removeClass("disabled")
+            .find(".time")
+            .attr("data-time",moment().format());
             let count = parseInt($(".saved-count").text());
             count++;
             console.log('count',count);
             $(".saved-count").text(count);
+            refreshTime();
             if(count == 0){
               $(".nav-saved").addClass("disabled");
             } else {
@@ -117,6 +121,7 @@ $(function() {
           count--;
           console.log('count',count);
           $(".saved-count").text(count);
+          refreshTime();
           if(count == 0){
             $(".nav-saved").addClass("disabled");
           } else {
@@ -207,9 +212,12 @@ $(function() {
 
       if(nameInput.length > 2  && commentInput.length > 2){
 
+        nameInput = escapeHtml(nameInput.trim());
+        commentInput = escapeHtml(commentInput.trim());
+
         const data = { 
-          name: nameInput.trim(),
-          body: commentInput.trim(),
+          name: nameInput,
+          body: commentInput,
           article: commentID
         };
 
@@ -226,7 +234,15 @@ $(function() {
       return false;
     });
 
+    function escapeHtml(text) {
+      'use strict';
+      return text.replace(/[\"&<>]/g, function (a) {
+          return { '"': '&quot;', '&': '&amp;', '<': '&lt;', '>': '&gt;' }[a];
+      });
+    }
+
     function showComments(arrayObj){
+      
       $("#comments,#comment-count").html(""); // empty counters
       $("form #name,form #body").val("");     // empty form fields
       let currentCountElement =  $("a[data-id="+commentID+"] .comment-count");
@@ -243,7 +259,7 @@ $(function() {
               </a>
               <strong>Name:</strong> ${element.comment.name}<br>
               <strong>Comment:</strong> ${element.comment.body}<br>
-              <strong>Date:</strong> ${element.comment.timeStamp}
+              <small><i class="fas fa-clock"></i> <span class="time" data-time="${element.comment.timeStamp}">${moment(element.comment.timeStamp).fromNow()}</span></small>
             <br><hr>
             </div>
           `);
@@ -252,4 +268,16 @@ $(function() {
         $("#comments").html("No comments yet... add one now!");
       }
     }
+
+    refreshTime();
+    function refreshTime() {
+      $(".time").each(function(){
+        var time = $(this).attr("data-time");
+        $(this).html(moment(time).fromNow());
+      });
+      console.log("updating times...");
+    }
+
+    setInterval(refreshTime,60000);
+
 });

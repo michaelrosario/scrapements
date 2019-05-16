@@ -45,6 +45,7 @@ module.exports = app => {
                     savedArticlesOnDB[article.title] = {};
                     savedArticlesOnDB[article.title]._id = article._id
                     savedArticlesOnDB[article.title].comments = article.comments
+                    savedArticlesOnDB[article.title].timeStamp = article.timeStamp
                 });
 
                 //console.log("savedArticles",savedArticles);
@@ -87,9 +88,10 @@ module.exports = app => {
                         
                         // console.log("savedArticlesOnDB[title]",savedArticlesOnDB[title]);
                         if(savedArticlesOnDB[title]){
-                            let article = savedArticlesOnDB[title];
-                            data._id = article._id;
-                            data.comments = article.comments;
+                            let articleObj = savedArticlesOnDB[title];
+                            data._id = articleObj._id;
+                            data.comments = articleObj.comments;
+                            data.timeStamp = articleObj.timeStamp;
                         } else {
                             data._id = "";
                         }                        

@@ -80,9 +80,11 @@
                               <a href="#" data-id="{{ _id }}" data-target="article{{@index}}" class="remove-article button btn-secondary">
                                 Remove from Saved
                               </a>
-                             <a href="#" data-id="{{ _id }}" data-target="article{{@index}}" class="comment-article button btn-primary">
+                              <a href="#" data-id="{{ _id }}" data-target="article{{@index}}" class="comment-article button btn-primary">
                                 View or Add Comments <span class="comment-count">{{#if comments.length}}({{comments.length}}){{/if}}</span>
                               </a>
+                              <br clear="all"/>
+                              <small><i class="fas fa-clock"></i> Saved <span class="time" data-time="{{ timeStamp }}">just now.</span></small>
                           </div>
                               
                         
