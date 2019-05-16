@@ -224,12 +224,16 @@ $(function() {
         });
       } 
       return false;
-    })
+    });
 
     function showComments(arrayObj){
-      $("#comments").html("");
-      $("form #name,form #body").val("");
+      $("#comments,#comment-count").html(""); // empty counters
+      $("form #name,form #body").val("");     // empty form fields
+      let currentCountElement =  $("a[data-id="+commentID+"] .comment-count");
+      currentCountElement.html("");
       if(arrayObj.length){
+        $("#comment-count").html(arrayObj.length);
+        currentCountElement.html("("+arrayObj.length+")");
         arrayObj.forEach(element => {
           $("#comments").prepend(`
               <div class="comment-entry"><a href="#" class="trashComment" 

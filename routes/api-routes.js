@@ -3,32 +3,26 @@ const cheerio = require("cheerio");
 const db = require("../models");
 
 module.exports = app => {
-
+    // catch all route
     app.get("/", (req, res) => {
-
         db.Article.find({}).then(savedArticles => {
-
             res.render("index",{ 
                 totalArticles: savedArticles.length,
                 page_title: "home" 
             });
-
-        });
-        
+        }); 
     });
+    // get all saved articles
     app.get("/saved", (req, res) => {
-
         db.Article.find({}).then(savedArticles => {
-
             res.render("index",{ 
                 data: savedArticles, 
                 totalArticles: savedArticles.length,
                 page_title: "saved"
              });
         });
-
     });
-
+    // scrape data from engadget
     app.get("/scrape", (req, res) => {
         let source = "https://www.engadget.com/";
         axios.get(source).then( response => {
@@ -41,15 +35,17 @@ module.exports = app => {
         const results = [];
         let articleCount = 0;
 
-
             db.Article.find({}).then( savedArticles => {
                 articleCount = savedArticles.length
                 
                 // create a new object to be used to check 
-                // if it article is already saved on the DB
+                // if it article is already saved on the DB using title as a key
                 var savedArticlesOnDB = {};
-                
-                savedArticles.map( article => savedArticlesOnDB[article.title] = article._id);
+                savedArticles.map( article => {
+                    savedArticlesOnDB[article.title] = {};
+                    savedArticlesOnDB[article.title]._id = article._id
+                    savedArticlesOnDB[article.title].comments = article.comments
+                });
 
                 //console.log("savedArticles",savedArticles);
                 //console.log("savedArticlesOnDB",savedArticlesOnDB);
@@ -72,33 +68,33 @@ module.exports = app => {
                                 .text()
                                 .trim();
 
+                    // add a link in case it is left it out
                     if(link.indexOf("https://www.engadget.com") == -1){
                         link = 'https://www.engadget.com'+link;
                     }
 
                     if(title && image){
 
-                            // check each article if it's in the saveArticles and include ID
-                                var data = {
-                                    title: title,
-                                    image: image,
-                                    category: category,
-                                    excerpt: excerpt,
-                                    source: source,
-                                    link: link
-                                }
-                                
-                                // fix this so it is checking for the right index
-                                // console.log("savedArticlesOnDB[title]",savedArticlesOnDB[title]);
-                                if(savedArticlesOnDB[title]){
-                                    data._id = savedArticlesOnDB[title];
-                                } else {
-                                    data._id = "";
-                                }                        
-                                results.push(data);
-                           
+                        // check each article if it's in the saveArticles and include ID
+                        var data = {
+                            title: title,
+                            image: image,
+                            category: category,
+                            excerpt: excerpt,
+                            source: source,
+                            link: link
                         }
-
+                        
+                        // console.log("savedArticlesOnDB[title]",savedArticlesOnDB[title]);
+                        if(savedArticlesOnDB[title]){
+                            let article = savedArticlesOnDB[title];
+                            data._id = article._id;
+                            data.comments = article.comments;
+                        } else {
+                            data._id = "";
+                        }                        
+                        results.push(data);              
+                    }
                 });
 
             // Log the results once you've looped through each of the elements found with cheerio
@@ -108,15 +104,12 @@ module.exports = app => {
                 totalArticles: articleCount,
                 page_title: "scrape"
             });
-
             }).catch(error => console.log(error));
-
         });
-            
     });
 
+    // save article to DB
     app.post("/save",(req, res) => {
-        
         db.Article.create(req.body)
         .then(dbArticle => res.json(dbArticle))
         .catch(function(err) {
@@ -124,11 +117,10 @@ module.exports = app => {
           console.log(err);
           res.json(err);
         });
-
     });
 
+    // delete article, delete all associated comments from DB
     app.post("/delete",(req, res) => {
-        
         // delete all related comments
         db.Comment.deleteMany({ 
             article: req.body._id
@@ -144,12 +136,10 @@ module.exports = app => {
                     res.json("failed remove "+req.body._id);
                 }
             }); 
-
         });
-
     });
 
-    // Route for grabbing a specific Article by id, populate it with it's comment
+    // Get all comments referenced to an Article
     app.get("/comment/:id", (req, res) => {
         // Using the id passed in the id parameter, prepare a query that finds the matching one in our db...
         db.Article.findOne({ _id: req.params.id })
@@ -163,6 +153,7 @@ module.exports = app => {
         });
     });
 
+    // Delete specific comment and remove from Article
     app.post("/comment/delete/:id/:articleId", (req, res) => {
         
         let articleId = req.params.articleId;
@@ -187,7 +178,7 @@ module.exports = app => {
         .exec((err,dbUpdate) => res.json(dbUpdate));
     });
 
-    // Route for saving/updating an Article's associated Comment
+    // Save comment to DB and associate to Article
     app.post("/comment/:id", (req, res) => {
         // Create a new comment and pass the req.body to the entry
         db.Comment.create(req.body)
@@ -208,5 +199,4 @@ module.exports = app => {
         .then(dbArticle => res.json(dbArticle))
         .catch(err => res.json(err));
     });
-
 }
