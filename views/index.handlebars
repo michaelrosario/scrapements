@@ -104,7 +104,7 @@
                       {{#if totalArticles}}
                         <a class="button body-btn btn-secondary" href="/saved"><i class="far fa-newspaper"></i> &nbsp; Click here to view Saved Articles</a> <br>OR<br>
                       {{/if}}
-                      <a class="button body-btn btn-secondary" href="/scrape"><i class="fas fa-archive"></i> &nbsp; There are no saved article yet. Click here to SCRAPE data! </a>
+                      <a class="button body-btn btn-secondary" href="/scrape"><i class="fas fa-archive"></i> &nbsp; {{#unless totalArticles}}There are no saved article yet.{{/unless}} Click here to SCRAPE data! </a>
                     </div>
 
                 {{/if}}

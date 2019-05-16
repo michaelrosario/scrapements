@@ -148,17 +148,13 @@ $(function() {
         success: function(response){
           console.log("comment",response);
           if(response.comments){
-  
             showComments(response.comments);
-
           } else {
             $("#comments").html("no comments...");
           }
         }
       });
-
       showOverlay(data[index]);
-
       return false;
     });
 
@@ -168,11 +164,12 @@ $(function() {
         console.log('object',obj);
     }
 
-    $(".modal-burger").on("click",function(){
+    $(".modal-burger").on("click", function(e){
         $(".overlay").fadeOut();
         setTimeout(function(){
           $(".overlay").removeClass("show");
         }, 1000);
+        return false;
     });
 
     $(document).on("click",".trashComment",function(){
@@ -183,9 +180,7 @@ $(function() {
         url: '/comment/delete/'+currentCommentId+"/"+commentID,
         method: "POST",
         success: function(response){
-          
           showComments(response.comments);
-
         }
       });
       return false;
@@ -224,21 +219,16 @@ $(function() {
           data: data,
           method: "POST",
           success: function(response){
-
             showComments(response.comments);
           }
         });
-      
       } 
-
       return false;
-
     })
 
     function showComments(arrayObj){
       $("#comments").html("");
-      $("form #name").val("");
-      $("form #body").val("");
+      $("form #name,form #body").val("");
       if(arrayObj.length){
         arrayObj.forEach(element => {
           $("#comments").prepend(`
@@ -258,5 +248,4 @@ $(function() {
         $("#comments").html("No comments yet... add one now!");
       }
     }
-        
 });

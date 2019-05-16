@@ -18,10 +18,10 @@ var CommentSchema = new Schema({
 });
 
 /*
-ArticleSchema.pre("deleteOne",function(next){
-  console.log("deleting related comments...");
-  next();
-});
+  ArticleSchema.pre("deleteOne",function(next){
+    console.log("deleting related comments...");
+    next();
+  });
 */
 
 // This creates our model from the above schema, using mongoose's model method
