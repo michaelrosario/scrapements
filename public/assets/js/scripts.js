@@ -72,6 +72,9 @@ $(function() {
           button.addClass("disabled").text(savedText);
           data[index]._id = id;
           article
+            .find("a")
+            .attr("data-id",id);
+          article
             .attr("data-id",id)
             .addClass("article-saved")
             .find(".options")
@@ -83,6 +86,7 @@ $(function() {
             console.log('count',count);
             $(".saved-count").text(count);
             refreshTime();
+            showComments(response.comments);
             if(count == 0){
               $(".nav-saved").addClass("disabled");
             } else {
@@ -100,7 +104,7 @@ $(function() {
       var target = $(this).attr("data-target");
       var article = $("#"+target);
       var index = article.attr("data-index");
-      
+
       console.log("data",data[index]);
 
       $.ajax({
@@ -109,6 +113,8 @@ $(function() {
         data: data[index],
         success: function(response){
           console.log('response',response);
+          
+          // take care of buttons
           article.removeClass("article-saved")
             .find(".options")
             .addClass("disabled");
@@ -117,6 +123,11 @@ $(function() {
             .find(".save-article")
             .removeClass("disabled");
 
+          // take care of comments
+          $("#comments,#comment-count").html(""); 
+          article.find(".comment-count").html("");
+
+          // update nav counters
           let count = parseInt($(".saved-count").text());
           count--;
           console.log('count',count);
@@ -143,7 +154,7 @@ $(function() {
       commentID = id;
       
       $("#current-title").text(data[index].title);
-      console.log("data id",data[index]._id);
+      console.log("current article",commentID);
 
       $("#comments").html("loading...");
 
@@ -153,7 +164,7 @@ $(function() {
         success: function(response){
           console.log("comment",response);
           if(response.comments){
-            showComments(response.comments);
+            showComments(response.comments,commentID);
           } else {
             $("#comments").html("no comments...");
           }
@@ -185,7 +196,7 @@ $(function() {
         url: '/comment/delete/'+currentCommentId+"/"+commentID,
         method: "POST",
         success: function(response){
-          showComments(response.comments);
+          showComments(response.comments,commentID);
         }
       });
       return false;
@@ -227,7 +238,7 @@ $(function() {
           data: data,
           method: "POST",
           success: function(response){
-            showComments(response.comments);
+            showComments(response.comments,commentID);
           }
         });
       } 
@@ -241,11 +252,11 @@ $(function() {
       });
     }
 
-    function showComments(arrayObj){
+    function showComments(arrayObj,articleId){
       
       $("#comments,#comment-count").html(""); // empty counters
       $("form #name,form #body").val("");     // empty form fields
-      let currentCountElement =  $("a[data-id="+commentID+"] .comment-count");
+      let currentCountElement =  $("a[data-id="+articleId+"] .comment-count");
       currentCountElement.html("");
       if(arrayObj.length){
         $("#comment-count").html(arrayObj.length);

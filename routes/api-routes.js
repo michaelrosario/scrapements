@@ -14,14 +14,17 @@ module.exports = app => {
     });
     // get all saved articles
     app.get("/saved", (req, res) => {
-        db.Article.find({}).then(savedArticles => {
-            res.render("index",{ 
-                data: savedArticles, 
-                totalArticles: savedArticles.length,
-                page_title: "saved"
-             });
+        db.Article.find({})
+            .sort({'timeStamp':'desc'})
+            .then(savedArticles => {
+                res.render("index",{ 
+                    data: savedArticles, 
+                    totalArticles: savedArticles.length,
+                    page_title: "saved"
+                });
+            });
         });
-    });
+        
     // scrape data from engadget
     app.get("/scrape", (req, res) => {
         let source = "https://www.engadget.com/";
