@@ -60,7 +60,7 @@ app.engine(
 // mongoose.connect("mongodb://localhost/scrapements", { useNewUrlParser: true });
 
 // Heroku
-var MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/mongoHeadlines";
+var MONGODB_URI = process.env.MONGODB_URI || "mongodb://dbuser:dbpassword1@ds145456.mlab.com:45456/heroku_h4cv6bqn";
 mongoose.connect(MONGODB_URI);
 
 require("./routes/api-routes.js")(app); // load our routes and pass in our app and fully configured passport
