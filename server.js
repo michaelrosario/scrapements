@@ -55,8 +55,13 @@ app.engine(
   );
   app.set("view engine", "handlebars");
   
-  // Connect to the Mongo DB
-mongoose.connect("mongodb://localhost/scrapements", { useNewUrlParser: true });
+// Connect to the Mongo DB
+// Local
+// mongoose.connect("mongodb://localhost/scrapements", { useNewUrlParser: true });
+
+// Heroku
+var MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/mongoHeadlines";
+mongoose.connect(MONGODB_URI);
 
 require("./routes/api-routes.js")(app); // load our routes and pass in our app and fully configured passport
 

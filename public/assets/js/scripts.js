@@ -126,6 +126,7 @@ $(function() {
           // take care of comments
           $("#comments,#comment-count").html(""); 
           article.find(".comment-count").html("");
+          data[index].comments = []; // empty comments on local data
 
           // update nav counters
           let count = parseInt($(".saved-count").text());
