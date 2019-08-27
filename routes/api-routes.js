@@ -54,8 +54,13 @@ module.exports = app => {
                 //console.log("savedArticles",savedArticles);
                 //console.log("savedArticlesOnDB",savedArticlesOnDB);
 
+
+                /*$("meta").each((i, element) => {
+                    console.log("<META>",$(element).attr("name")+" : "+$(element).attr("content"));
+                });*/
+
                 $("article.o-hit").each((i, element) => {
-                    
+        
                     var image = $(element).find(".lazy,.stretch-img").attr('data-original') || "";
                     var title = $(element).find("h2").text().trim() || "";
                     var excerpt =  $(element)
